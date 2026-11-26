@@ -1,0 +1,26 @@
+{
+  "windows": {"中缝": [9, 11], "上沿": [2, 2]},
+  "frames": [
+    {"frame":"LX7","side":"left","content":"旧版左景","measurements":{"中缝":7,"上沿":0}},
+    {"frame":"LX6","side":"left","content":"左过渡六档","measurements":{"中缝":6,"上沿":0}},
+    {"frame":"LX5","side":"left","content":"左过渡五档","measurements":{"中缝":5,"上沿":0}},
+    {"frame":"LX4","side":"left","content":"左过渡四档","measurements":{"中缝":4,"上沿":0}},
+    {"frame":"LX3","side":"left","content":"新版左景","measurements":{"中缝":3,"上沿":0}},
+    {"frame":"RX3","side":"right","content":"旧版右景","measurements":{"中缝":3,"上沿":2}},
+    {"frame":"RX4","side":"right","content":"右过渡四档","measurements":{"中缝":4,"上沿":2}},
+    {"frame":"RX5","side":"right","content":"右过渡五档","measurements":{"中缝":5,"上沿":2}},
+    {"frame":"RX6","side":"right","content":"右过渡六档","measurements":{"中缝":6,"上沿":2}},
+    {"frame":"RX7","side":"right","content":"新版右景","measurements":{"中缝":7,"上沿":2}},
+    {"frame":"LM0","side":"left","content":"双测点左原画","measurements":{"中缝":7,"上沿":7}},
+    {"frame":"LM1","side":"left","content":"双测点左终画","measurements":{"中缝":8,"上沿":5}},
+    {"frame":"RM0","side":"right","content":"双测点右原画","measurements":{"中缝":3,"上沿":3}},
+    {"frame":"RM1","side":"right","content":"双测点右终画","measurements":{"中缝":1,"上沿":4}}
+  ],
+  "cases": {
+    "direct": {"start":{"left":"LX7","right":"RX3"},"request":{"request":"exchange-direct","left":["LX3"],"right":["RX7"]}},
+    "long": {"start":{"left":"LX7","right":"RX3"},"request":{"request":"exchange-long","left":["LX6","LX5","LX4","LX3"],"right":["RX4","RX5","RX6","RX7"]}},
+    "dead_end": {"start":{"left":"LX6","right":"RX4"},"request":{"request":"exchange-dead-end","left":["LX5"],"right":["RX3","RX5"]}},
+    "branch": {"start":{"left":"LX7","right":"RX4"},"request":{"request":"exchange-branch","left":["LX6","LX7","LX6"],"right":["RX5","RX4"]}},
+    "mixed_points": {"windows":{"中缝":[9,11],"上沿":[9,11]},"start":{"left":"LM0","right":"RM0"},"request":{"request":"exchange-mixed","left":["LM1"],"right":["RM1"]}}
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "draft": "default",
+  "release": "edition-1",
+  "show": "matinee",
+  "rehearsals": {"left": "L3", "right": "R1"},
+  "cues": [
+    {"side": "left", "request": "left-1", "frame": "L1"},
+    {"side": "left", "request": "left-2", "frame": "L2"},
+    {"side": "right", "request": "right-1", "frame": "R1"},
+    {"side": "right", "request": "right-2", "frame": "R2"}
+  ]
+}

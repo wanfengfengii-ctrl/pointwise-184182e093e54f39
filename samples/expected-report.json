@@ -1,0 +1,21 @@
+{
+  "report": "report-matinee",
+  "show": "matinee",
+  "release": "edition-1",
+  "sides": {
+    "left": {
+      "played": [
+        {"show":"matinee","release":"edition-1","side":"left","request":"left-1","frame":"L1","sequence":1},
+        {"show":"matinee","release":"edition-1","side":"left","request":"left-2","frame":"L2","sequence":2}
+      ],
+      "missing": ["L3"]
+    },
+    "right": {
+      "played": [
+        {"show":"matinee","release":"edition-1","side":"right","request":"right-1","frame":"R1","sequence":1},
+        {"show":"matinee","release":"edition-1","side":"right","request":"right-2","frame":"R2","sequence":2}
+      ],
+      "missing": []
+    }
+  }
+}
