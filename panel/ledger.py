@@ -48,6 +48,14 @@ def initialize_panel_ledger(path, side):
             frame_id TEXT NOT NULL, sequence INTEGER NOT NULL CHECK(sequence > 0),
             PRIMARY KEY(show_id, request_id), UNIQUE(show_id, sequence)
         )''')
+        db.execute('''CREATE TABLE IF NOT EXISTS rollout_steps (
+            rollout_id TEXT NOT NULL,
+            show_id TEXT NOT NULL,
+            side TEXT NOT NULL,
+            step INTEGER NOT NULL CHECK(step > 0),
+            response TEXT NOT NULL,
+            PRIMARY KEY (rollout_id, side, step)
+        )''')
 
 
 def read_screen_state(db, show):

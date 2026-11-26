@@ -151,7 +151,7 @@ class Cluster:
             connection.close()
 
 
-def demo():
+def demo(run_rollout=True):
     operations = sample('operations')
     show = operations['show']
     release = operations['release']
@@ -178,6 +178,10 @@ def demo():
                  expected, original, ['panel/display.py', 'review/intake.py', 'review/coverage.py', 'review/history.py'],
                  '按四次正式送达逐侧手排端内序次，L3 仅试映，取原片单中从未正式播过的画面')
         print(json.dumps({'seam': fixed['meters'], 'report': actual}, ensure_ascii=False, indent=2))
+    if run_rollout:
+        # 在线换版演练：真实 HTTP 的直切拒绝、扣留回执后的断台续办与左3右7终态。
+        from tests.rollout_demo import showcase
+        showcase()
 
 
 if __name__ == '__main__':

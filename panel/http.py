@@ -6,6 +6,7 @@ from http.server import ThreadingHTTPServer
 
 from art.models import Conflict, Side, identifier
 from edition.packages import load_release, package_for_side
+from panel.advance import advance_rollout, read_step_response
 from panel.display import display_frame, read_current_display
 from panel.install import install_package, load_installation
 from panel.ledger import initialize_panel_ledger, open_panel_ledger, panel_transaction
@@ -30,6 +31,11 @@ class PanelRequestHandler(JsonHandler):
         if Side(path[1]) != self.side:
             raise Conflict('request addresses the other panel')
         match method, path[2:]:
+            case 'POST', ['advance']:
+                fields(body, 'ticket', 'step', optional=('receipt',))
+                return 200, advance_rollout(self.panel_path, self.side, body)
+            case 'GET', ['steps', rollout, step_raw]:
+                return 200, read_step_response(self.panel_path, self.side, rollout, step_raw)
             case 'POST', ['display']:
                 fields(body, 'show', 'release', 'side', 'request', 'frame')
                 cue = OrdinaryCue(**body)

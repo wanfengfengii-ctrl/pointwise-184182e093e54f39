@@ -3,6 +3,7 @@ from dataclasses import dataclass
 
 from art.models import Conflict, Side, identifier
 from edition.packages import load_release, package_for_side
+from show.rollout import show_has_rollout
 from show.session import ShowPhase, load_session
 from show.store import control_transaction, open_control_store
 
@@ -50,4 +51,7 @@ def ordinary_display_gate(path, cue):
         _require_open(session)
         if cue.release != session.release:
             raise CueRejected('cue release differs from the show release')
+        if show_has_rollout(db, cue.show):
+            # 已受理换版：拦住普通新切画。原有普通首执在进入此锁前已按原执复领。
+            raise CueRejected('show has an accepted rollout; ordinary new displays are suspended until close')
         yield session

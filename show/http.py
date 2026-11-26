@@ -14,6 +14,7 @@ from review.report import finalize_report, get_report
 from show.close import close_show
 from show.cues import prepare_cue
 from show.readiness import open_show
+from show.rollout import accept_rollout, initialize_rollouts
 from show.session import create_session, initialize_sessions, load_session
 from show.store import control_transaction, open_control_store
 from show.transport import JsonHandler, PanelUnavailable, exchange, fields
@@ -25,6 +26,7 @@ def initialize_control(path):
         initialize_drafts(db)
         initialize_releases(db)
         initialize_sessions(db)
+        initialize_rollouts(db)
         initialize_reports(db)
 
 
@@ -39,6 +41,18 @@ class ControlRequestHandler(JsonHandler):
         if status != 200:
             raise PanelUnavailable(f'{side} {resource} returned HTTP {status}')
         return data
+
+    def _panel_current(self, side, show):
+        status, data = exchange(self.panel_ports[side], 'GET', f'/panels/{side}/shows/{show}/current')
+        if status == 200:
+            return data
+        if status == 404:
+            return None
+        raise PanelUnavailable(f'{side} current returned HTTP {status}')
+
+    def _panel_step(self, side, rollout, step):
+        return exchange(self.panel_ports[Side(side)], 'GET',
+                        f'/panels/{Side(side)}/steps/{rollout}/{step}')
 
     def dispatch(self, method, path, body):
         match method, path:
@@ -63,6 +77,9 @@ class ControlRequestHandler(JsonHandler):
                 fields(body, 'show', 'release')
                 with control_transaction(self.db_path) as db:
                     return 200, asdict(create_session(db, **body))
+            case 'POST', ['shows', show, 'rollout']:
+                fields(body, 'request', 'left', 'right')
+                return 200, accept_rollout(self.db_path, show, body, self._panel_current)
             case 'POST', ['shows', show, 'open']:
                 fields(body, 'evidence')
                 read = partial(self._panel_read, resource='rehearsal')
@@ -76,7 +93,7 @@ class ControlRequestHandler(JsonHandler):
                 return exchange(self.panel_ports[cue.side], 'POST', f'/panels/{cue.side}/display', asdict(cue))
             case 'POST', ['shows', show, 'close']:
                 fields(body)
-                return 200, asdict(close_show(self.db_path, show))
+                return 200, asdict(close_show(self.db_path, show, self._panel_step))
             case 'POST', ['shows', show, 'report']:
                 fields(body)
                 read = partial(self._panel_read, resource='log')
